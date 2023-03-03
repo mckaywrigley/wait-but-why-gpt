@@ -4,8 +4,6 @@ AI-powered search and chat for Tim Urban's blog "Wait But Why."
 
 [![Wait But Why GPT](./public/wbw.png)](https://waitbutwhy.com/)
 
-All code & data used is 100% open-source.
-
 ## Dataset
 
 The dataset is a CSV file containing all text & embeddings used.
