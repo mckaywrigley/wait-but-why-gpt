@@ -2,9 +2,11 @@ import { Answer } from "@/components/Answer/Answer";
 import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
 import { WBWChunk } from "@/types";
+import { getImage } from "@/utils/images";
 import { IconArrowRight, IconExternalLink, IconSearch } from "@tabler/icons-react";
 import endent from "endent";
 import Head from "next/head";
+import Image from "next/image";
 import { KeyboardEvent, useEffect, useRef, useState } from "react";
 
 export default function Home() {
@@ -347,12 +349,21 @@ export default function Home() {
                     <div key={index}>
                       <div className="mt-4 border border-zinc-600 rounded-lg p-4">
                         <div className="flex justify-between">
-                          <div>
-                            <div className="font-bold text-xl">{chunk.post_title}</div>
-                            <div className="mt-1 font-bold text-sm">{chunk.post_date}</div>
+                          <div className="flex items-center">
+                            <Image
+                              className="rounded-lg"
+                              src={getImage(chunk.post_title)}
+                              width={103}
+                              height={70}
+                              alt={chunk.post_title}
+                            />
+                            <div className="ml-4">
+                              <div className="font-bold text-xl">{chunk.post_title}</div>
+                              <div className="mt-1 font-bold text-sm">{chunk.post_date}</div>
+                            </div>
                           </div>
                           <a
-                            className="hover:opacity-50 ml-2"
+                            className="hover:opacity-50 ml-4"
                             href={chunk.post_url}
                             target="_blank"
                             rel="noreferrer"
@@ -360,7 +371,7 @@ export default function Home() {
                             <IconExternalLink />
                           </a>
                         </div>
-                        <div className="mt-2">{chunk.content}</div>
+                        <div className="mt-4">{chunk.content}</div>
                       </div>
                     </div>
                   ))}
@@ -373,9 +384,18 @@ export default function Home() {
                   <div key={index}>
                     <div className="mt-4 border border-zinc-600 rounded-lg p-4">
                       <div className="flex justify-between">
-                        <div>
-                          <div className="font-bold text-xl">{chunk.post_title}</div>
-                          {chunk.post_date ? <div className="mt-1 font-bold text-sm">{chunk.post_date}</div> : null}
+                        <div className="flex items-center">
+                          <Image
+                            className="rounded-lg"
+                            src={getImage(chunk.post_title)}
+                            width={103}
+                            height={70}
+                            alt={chunk.post_title}
+                          />
+                          <div className="ml-4">
+                            <div className="font-bold text-xl">{chunk.post_title}</div>
+                            <div className="mt-1 font-bold text-sm">{chunk.post_date}</div>
+                          </div>
                         </div>
                         <a
                           className="hover:opacity-50 ml-2"
@@ -386,7 +406,7 @@ export default function Home() {
                           <IconExternalLink />
                         </a>
                       </div>
-                      <div className="mt-2">{chunk.content}</div>
+                      <div className="mt-4">{chunk.content}</div>
                     </div>
                   </div>
                 ))}
