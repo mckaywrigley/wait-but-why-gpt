@@ -4,15 +4,15 @@ import * as cheerio from "cheerio";
 import fs from "fs";
 import { encode } from "gpt-3-encoder";
 
-const BASE_URL = "https://waitbutwhy.com";
+const BASE_URL = "https://helpcenter.paddypower.com";
 
-const ARCHIVE_PAGE_1 = "/archive";
-const ARCHIVE_PAGE_2 = "/archive/page/2";
-const ARCHIVE_CLASS = ".archive-page";
+const ARCHIVE_PAGE_1 = "/app/answers/list/p/6/c/1862";
+const ARCHIVE_PAGE_2 = "/app/answers/list/p/6/c/16";
+const ARCHIVE_CLASS = ".article-list";
 
-const MINIS_PAGE_1 = "/minis";
-const MINIS_PAGE_2 = "/minis/page/2";
-const MINIS_CLASS = ".archive-postlist";
+const MINIS_PAGE_1 = "/app/answers/list/p/6/c/1450";
+const MINIS_PAGE_2 = "/app/answers/list/p/6/c/1860";
+const MINIS_CLASS = ".article-list";
 
 const CHUNK_SIZE = 200;
 
@@ -28,13 +28,13 @@ const getLinks = async (page: string, className: string) => {
     const href = $(link).attr("href");
 
     if (href) {
-      links.push(href);
+      links.push(BASE_URL + href);
     }
   });
 
-  const filteredLinks = [...new Set(links.filter((link) => link.endsWith(".html")))];
+  // const filteredLinks = [...new Set(links.filter((link) => link.endsWith(".html")))];
 
-  return filteredLinks;
+  return links;
 };
 
 const getPost = async (url: string, type: "post" | "mini") => {
@@ -52,9 +52,9 @@ const getPost = async (url: string, type: "post" | "mini") => {
   const html = await axios.get(url);
   const $ = cheerio.load(html.data);
 
-  const title = $("header h1").text().trim();
+  const title = $("div h2").text().trim();
   const date = $("header .date").text().trim();
-  const text = $(".entry-content #pico").text().trim();
+  const text = $(".article-content").text().trim();
 
   let cleanedText = text.replace(/\s+/g, " ");
   cleanedText = cleanedText.replace(/\.([a-zA-Z])/g, ". $1");

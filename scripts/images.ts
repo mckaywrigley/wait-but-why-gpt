@@ -2,14 +2,14 @@ import axios from "axios";
 import * as cheerio from "cheerio";
 import fs from "fs";
 
-const BASE_URL = "https://waitbutwhy.com";
+const BASE_URL = "https://helpcenter.paddypower.com";
 
-const ARCHIVE_PAGE_1 = "/archive";
-const ARCHIVE_PAGE_2 = "/archive/page/2";
-const ARCHIVE_CLASS = ".post-list";
+const ARCHIVE_PAGE_1 = "/app/answers/list/p/6/c/1862";
+const ARCHIVE_PAGE_2 = "/app/answers/list/p/6/c/16";
+const ARCHIVE_CLASS = ".article-list";
 
-const MINIS_PAGE_1 = "/minis";
-const MINIS_PAGE_2 = "/minis/page/2";
+const MINIS_PAGE_1 = "/app/answers/list/p/6/c/1450";
+const MINIS_PAGE_2 = "/app/answers/list/p/6/c/1860";
 
 const getArchiveImages = async (page: string) => {
   const fullLink = BASE_URL + page;
@@ -53,19 +53,19 @@ const getMinisImages = async (page: string) => {
   return images;
 };
 
-(async () => {
-  let images: { title: string; src: string }[] = [];
-
-  const archivePage1Images = await getArchiveImages(ARCHIVE_PAGE_1);
-  const archivePage2Images = await getArchiveImages(ARCHIVE_PAGE_2);
-
-  const minisPage1Images = await getMinisImages(MINIS_PAGE_1);
-  const minisPage2Images = await getMinisImages(MINIS_PAGE_2);
-
-  images = [...archivePage1Images, ...archivePage2Images, ...minisPage1Images, ...minisPage2Images];
-
-  console.log(images);
-  console.log(images.length);
-
-  fs.writeFileSync("scripts/images.json", JSON.stringify(images));
-})();
+// (async () => {
+//   let images: { title: string; src: string }[] = [];
+//
+//   const archivePage1Images = await getArchiveImages(ARCHIVE_PAGE_1);
+//   const archivePage2Images = await getArchiveImages(ARCHIVE_PAGE_2);
+//
+//   const minisPage1Images = await getMinisImages(MINIS_PAGE_1);
+//   const minisPage2Images = await getMinisImages(MINIS_PAGE_2);
+//
+//   images = [...archivePage1Images, ...archivePage2Images, ...minisPage1Images, ...minisPage2Images];
+//
+//   console.log(images);
+//   console.log(images.length);
+//
+//   fs.writeFileSync("scripts/images.json", JSON.stringify(images));
+// })();
