@@ -10,72 +10,38 @@ import Image from "next/image";
 import { KeyboardEvent, useEffect, useRef, useState } from "react";
 
 export default function Home() {
-  const inputRef = useRef<HTMLInputElement>(null);
 
+  const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState<string>("");
   const [chunks, setChunks] = useState<WBWChunk[]>([]);
   const [answer, setAnswer] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-
+  const [loading, setLoading] = useState<boolean>(false);  
   const [showSettings, setShowSettings] = useState<boolean>(false);
-  const [mode, setMode] = useState<"search" | "chat">("chat");
-  const [matchCount, setMatchCount] = useState<number>(5);
   const [apiKey, setApiKey] = useState<string>("");
 
-  const handleSearch = async () => {
-    if (!apiKey) {
-      alert("Please enter an API key.");
-      return;
-    }
-
-    if (!query) {
-      alert("Please enter a query.");
-      return;
-    }
-
-    setAnswer("");
-    setChunks([]);
-
-    setLoading(true);
-
-    const searchResponse = await fetch("/api/search", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ query, apiKey, matches: matchCount })
-    });
-
-    if (!searchResponse.ok) {
-      setLoading(false);
-      throw new Error(searchResponse.statusText);
-    }
-
-    const results: WBWChunk[] = await searchResponse.json();
-
-    setChunks(results);
-
-    setLoading(false);
-
-    return results;
-  };
-
+  // Get answer to query 
   const handleAnswer = async () => {
+
+    console.log("--- /// ---");
+    console.log("***HANDLE ANSWER***");
+    console.log("--- /// ---");
+    
     if (!apiKey) {
       alert("Please enter an API key.");
       return;
     }
-
     if (!query) {
       alert("Please enter a query.");
       return;
     }
-
+    
     setAnswer("");
     setChunks([]);
-
     setLoading(true);
 
+    // *** 
+    // TO DO: Get chunks from DBQA  
+    const matchCount = 1;
     const searchResponse = await fetch("/api/search", {
       method: "POST",
       headers: {
@@ -83,47 +49,47 @@ export default function Home() {
       },
       body: JSON.stringify({ query, apiKey, matches: matchCount })
     });
-
     if (!searchResponse.ok) {
       setLoading(false);
       throw new Error(searchResponse.statusText);
     }
-
+    // Chunks from similarity search 
     const results: WBWChunk[] = await searchResponse.json();
-
     setChunks(results);
+    // 
+    // *** 
 
-    const prompt = endent`
-    Use the following passages to provide an answer to the query: "${query}"
-
-    ${results?.map((d: any) => d.content).join("\n\n")}
-    `;
-
-    const answerResponse = await fetch("/api/answer", {
+    console.log("--- /// QUERY /// ---");
+    console.log(query);
+    console.log("--- /// ---");
+    const prompt = query;
+    const answerResponse = await fetch("/api/vectordbqa", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({ prompt, apiKey })
-    });
+     });
+    
+     console.log("--- /// ANSWER /// ---");
+     console.log(answerResponse.body);
+     console.log("--- /// ---");
 
+    // Check answer 
     if (!answerResponse.ok) {
       setLoading(false);
       throw new Error(answerResponse.statusText);
     }
-
     const data = answerResponse.body;
-
     if (!data) {
       return;
     }
 
+    // Reading and decoding data from a ReadableStream object obtained from previous API response.
     setLoading(false);
-
     const reader = data.getReader();
     const decoder = new TextDecoder();
     let done = false;
-
     while (!done) {
       const { value, done: doneReading } = await reader.read();
       done = doneReading;
@@ -131,66 +97,38 @@ export default function Home() {
       setAnswer((prev) => prev + chunkValue);
     }
   };
-
+  
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      if (mode === "search") {
-        handleSearch();
-      } else {
         handleAnswer();
       }
-    }
   };
 
+  // Save user API setting 
   const handleSave = () => {
     if (apiKey.length !== 51) {
       alert("Please enter a valid API key.");
       return;
     }
 
+    // Set values from user inputs 
     localStorage.setItem("WBW_KEY", apiKey);
-    localStorage.setItem("WBW_MATCH_COUNT", matchCount.toString());
-    localStorage.setItem("WBW_MODE", mode);
-
     setShowSettings(false);
   };
 
   const handleClear = () => {
     localStorage.removeItem("WBW_KEY");
-    localStorage.removeItem("WBW_MATCH_COUNT");
-    localStorage.removeItem("WBW_MODE");
-
     setApiKey("");
-    setMatchCount(5);
-    setMode("search");
   };
 
   useEffect(() => {
-    if (matchCount > 10) {
-      setMatchCount(10);
-    } else if (matchCount < 1) {
-      setMatchCount(1);
-    }
-  }, [matchCount]);
-
-  useEffect(() => {
     const WBW_KEY = localStorage.getItem("WBW_KEY");
-    const WBW_MATCH_COUNT = localStorage.getItem("WBW_MATCH_COUNT");
-    const WBW_MODE = localStorage.getItem("WBW_MODE");
-
     if (WBW_KEY) {
       setApiKey(WBW_KEY);
     }
-
-    if (WBW_MATCH_COUNT) {
-      setMatchCount(parseInt(WBW_MATCH_COUNT));
-    }
-
-    if (WBW_MODE) {
-      setMode(WBW_MODE as "search" | "chat");
-    }
   }, []);
 
+  // Render page
   return (
     <>
       <Head>
@@ -222,30 +160,6 @@ export default function Home() {
 
             {showSettings && (
               <div className="w-[340px] sm:w-[400px]">
-                <div>
-                  <div>Mode</div>
-                  <select
-                    className="max-w-[400px] block w-full cursor-pointer rounded-md border border-gray-300 p-2 text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm"
-                    value={mode}
-                    onChange={(e) => setMode(e.target.value as "search" | "chat")}
-                  >
-                    <option value="search">Search</option>
-                    <option value="chat">Chat</option>
-                  </select>
-                </div>
-
-                <div className="mt-2">
-                  <div>Passage Count</div>
-                  <input
-                    type="number"
-                    min={1}
-                    max={10}
-                    value={matchCount}
-                    onChange={(e) => setMatchCount(Number(e.target.value))}
-                    className="max-w-[400px] block w-full rounded-md border border-gray-300 p-2 text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm"
-                  />
-                </div>
-
                 <div className="mt-2">
                   <div>OpenAI API Key</div>
                   <input
@@ -295,12 +209,6 @@ export default function Home() {
                   onKeyDown={handleKeyDown}
                 />
 
-                <button>
-                  <IconArrowRight
-                    onClick={mode === "search" ? handleSearch : handleAnswer}
-                    className="absolute right-2 top-2.5 h-7 w-7 rounded-full bg-blue-500 p-1 hover:cursor-pointer hover:bg-blue-600 sm:right-3 sm:top-3 sm:h-10 sm:w-10 text-white"
-                  />
-                </button>
               </div>
             ) : (
               <div className="text-center font-bold text-3xl mt-7">
@@ -317,18 +225,6 @@ export default function Home() {
 
             {loading ? (
               <div className="mt-6 w-full">
-                {mode === "chat" && (
-                  <>
-                    <div className="font-bold text-2xl">Answer</div>
-                    <div className="animate-pulse mt-2">
-                      <div className="h-4 bg-gray-300 rounded"></div>
-                      <div className="h-4 bg-gray-300 rounded mt-2"></div>
-                      <div className="h-4 bg-gray-300 rounded mt-2"></div>
-                      <div className="h-4 bg-gray-300 rounded mt-2"></div>
-                      <div className="h-4 bg-gray-300 rounded mt-2"></div>
-                    </div>
-                  </>
-                )}
 
                 <div className="font-bold text-2xl mt-6">Passages</div>
                 <div className="animate-pulse mt-2">
