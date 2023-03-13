@@ -24,6 +24,12 @@ export type WBWChunk = {
   embedding: number[];
 };
 
+export type LEXChunk = {
+  pageContent: string;
+  source: string;
+  length: number;
+};
+
 export type WBWJSON = {
   current_date: string;
   author: string;

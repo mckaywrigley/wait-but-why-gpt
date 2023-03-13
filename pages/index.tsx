@@ -2,6 +2,7 @@ import { Answer } from "@/components/Answer/Answer";
 import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
 import { WBWChunk } from "@/types";
+import { LEXChunk } from "@/types";
 import { getImage } from "@/utils/images";
 import { IconArrowRight, IconExternalLink, IconSearch } from "@tabler/icons-react";
 import endent from "endent";
@@ -13,7 +14,8 @@ export default function Home() {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState<string>("");
-  const [chunks, setChunks] = useState<WBWChunk[]>([]);
+  // const [chunks, setChunks] = useState<WBWChunk[]>([]);
+  const [chunks, setChunks] = useState<LEXChunk[]>([]);
   const [answer, setAnswer] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);  
   const [showSettings, setShowSettings] = useState<boolean>(false);
@@ -40,7 +42,7 @@ export default function Home() {
     setLoading(true);
 
     // *** 
-    // TO DO: Get chunks from DBQA  
+    // TO DO: REMOVE THIS 
     const matchCount = 1;
     const searchResponse = await fetch("/api/search", {
       method: "POST",
@@ -63,6 +65,8 @@ export default function Home() {
     console.log(query);
     console.log("--- /// ---");
     const prompt = query;
+    
+    // Get data 
     const answerResponse = await fetch("/api/vectordbqa", {
       method: "POST",
       headers: {
@@ -71,20 +75,25 @@ export default function Home() {
       body: JSON.stringify({ prompt, apiKey })
      });
     
-     console.log("--- /// ANSWER /// ---");
-     console.log(answerResponse.body);
-     console.log("--- /// ---");
+    // Sources passed as list of JSON     
+    const sourceDocumentsHeader = answerResponse.headers.get("sourceDocuments"); // get the sourceDocuments header
+    const sourceDocuments = JSON.parse(sourceDocumentsHeader);
+    console.log("--- /// ANSWER /// ---");
+    console.log(sourceDocuments);
+    console.log("--- /// ---");
 
     // Check answer 
     if (!answerResponse.ok) {
       setLoading(false);
       throw new Error(answerResponse.statusText);
     }
+    
+    // Text answer rendered
     const data = answerResponse.body;
     if (!data) {
       return;
     }
-
+    
     // Reading and decoding data from a ReadableStream object obtained from previous API response.
     setLoading(false);
     const reader = data.getReader();
