@@ -3,59 +3,39 @@ import { FC } from "react";
 
 export const Footer: FC = () => {
   return (
-    <div className="flex h-[50px] border-t border-gray-300 py-2 px-8 items-center sm:justify-between justify-center">
-      <div className="hidden sm:flex"></div>
-
-      <div className="hidden sm:flex italic text-sm">
-        Created by
-        <a
-          className="hover:opacity-50 mx-1"
-          href="https://twitter.com/mckaywrigley"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Mckay Wrigley
-        </a>
-        based on
-        <a
-          className="hover:opacity-50 ml-1"
-          href="https://twitter.com/waitbutwhy"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Tim Urban
-        </a>
-        {`'s blog`}
-        <a
-          className="hover:opacity-50 ml-1"
-          href="https://waitbutwhy.com/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Wait But Why
-        </a>
-        .
+    <div className="footer-section">
+      <div className="back-to-top-container">
+        <button className="back-to-top before:w-16 before:h-16" onClick={() => window.scrollTo(0, 0)}><span>Back to top</span></button>
       </div>
-
-      <div className="flex space-x-4">
-        <a
-          className="flex items-center hover:opacity-50"
-          href="https://twitter.com/mckaywrigley"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <IconBrandTwitter size={24} />
-        </a>
-
-        <a
-          className="flex items-center hover:opacity-50"
-          href="https://github.com/mckaywrigley/wait-but-why-gpt"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <IconBrandGithub size={24} />
-        </a>
-      </div>
+      <ul className="footer-list">
+        <li className="footer-list-item">
+          <a href="https://www.paddypower.com/aboutUs/Privacy.Policy/" target="_blank" className="footer-link">Privacy
+            Policy</a>
+        </li>
+        <li className="footer-list-item">
+          <a href="https://www.paddypower.com/en/aboutUs/Terms.and.Conditions/" target="_blank"
+             className="footer-link">Terms &amp; Conditions</a>
+        </li>
+        <li className="footer-list-item">
+          <a href="https://www.paddypower.com/aboutUs/Cookie.Policy/" target="_blank" className="footer-link">Cookie
+            Policy</a>
+        </li>
+        <li className="footer-list-item">
+          <a href="https://helpcenter.paddypower.com/app/answers/detail/p/6/a_id/70" target="_blank"
+             className="footer-link">Underage gambling is an offence</a>
+        </li>
+        <li className="footer-list-item">
+          <a href="https://www.paddypower.com/en/aboutUs/Betting.Rules/" target="_blank"
+             className="footer-link">Rules &amp; Regulations</a>
+        </li>
+        <li className="footer-list-item">
+          <a href="https://www.paddypower.com/bet" className="footer-link">PaddyPower.com</a>
+        </li>
+        <li className="footer-list-item">
+          <a href="https://responsiblegaming.paddypower.com/" target="_blank" className="footer-link">Gambling can be
+            addictive, use our online tools for a safer way to play</a>
+        </li>
+      </ul>
     </div>
   );
 };

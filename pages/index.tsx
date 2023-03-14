@@ -194,7 +194,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Wait But Why GPT</title>
+        <title>Helpcenter GPT</title>
         <meta
           name="description"
           content={`AI-powered search and chat for Tim Urban's blog "Wait But Why."`}
@@ -211,7 +211,7 @@ export default function Home() {
 
       <div className="flex flex-col h-screen">
         <Navbar />
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1">
           <div className="mx-auto flex h-full w-full max-w-[750px] flex-col items-center px-3 pt-4 sm:pt-8">
             <button
               className="mt-4 flex cursor-pointer items-center space-x-2 rounded-full border border-zinc-600 px-3 py-1 text-sm hover:opacity-50"
@@ -330,7 +330,7 @@ export default function Home() {
                   </>
                 )}
 
-                <div className="font-bold text-2xl mt-6">Passages</div>
+                <div className="font-bold text-2xl mt-6">Search Results</div>
                 <div className="animate-pulse mt-2">
                   <div className="h-4 bg-gray-300 rounded"></div>
                   <div className="h-4 bg-gray-300 rounded mt-2"></div>
@@ -341,25 +341,26 @@ export default function Home() {
               </div>
             ) : answer ? (
               <div className="mt-6">
-                <div className="font-bold text-2xl mb-2">Answer</div>
+                <div className="font-bold text-2xl mb-2">Search Results</div>
                 <Answer text={answer} />
 
                 <div className="mt-6 mb-16">
-                  <div className="font-bold text-2xl">Passages</div>
+                  <div className="font-bold text-2xl">Search Results</div>
+                  <div className="text-sm contentColor">{chunks.length} matched your search</div>
 
                   {chunks.map((chunk, index) => (
                     <div key={index}>
-                      <div className="mt-4 border border-zinc-600 rounded-lg p-4">
+                      <div className="mt-4 border rounded-lg p-4 shadow-3xl">
                         <div className="flex justify-between">
                           <div className="flex items-center">
-                            <Image
-                              className="rounded-lg"
-                              src={getImage(chunk.post_title)}
-                              width={103}
-                              height={70}
-                              alt={chunk.post_title}
-                            />
-                            <div className="ml-4">
+                            {/*<Image*/}
+                            {/*  className="rounded-lg"*/}
+                            {/*  src={getImage(chunk.post_title)}*/}
+                            {/*  width={103}*/}
+                            {/*  height={70}*/}
+                            {/*  alt={chunk.post_title}*/}
+                            {/*/>*/}
+                            <div>
                               <div className="font-bold text-xl">{chunk.post_title}</div>
                               <div className="mt-1 font-bold text-sm">{chunk.post_date}</div>
                             </div>
@@ -373,7 +374,7 @@ export default function Home() {
                             <IconExternalLink />
                           </a>
                         </div>
-                        <div className="mt-4">{chunk.content}</div>
+                        <div className="mt-4 contentColor">{chunk.content}</div>
                       </div>
                     </div>
                   ))}
@@ -381,20 +382,21 @@ export default function Home() {
               </div>
             ) : chunks.length > 0 ? (
               <div className="mt-6 pb-16">
-                <div className="font-bold text-2xl">Passages</div>
+                <div className="font-bold text-2xl">Search Results</div>
+                <div className="text-sm contentColor">{chunks.length} matched your search</div>
                 {chunks.map((chunk, index) => (
                   <div key={index}>
-                    <div className="mt-4 border border-zinc-600 rounded-lg p-4">
+                    <div className="mt-4 border rounded-lg p-4 shadow-3xl">
                       <div className="flex justify-between">
                         <div className="flex items-center">
-                          <Image
-                            className="rounded-lg"
-                            src={getImage(chunk.post_title)}
-                            width={103}
-                            height={70}
-                            alt={chunk.post_title}
-                          />
-                          <div className="ml-4">
+                          {/*<Image*/}
+                          {/*  className="rounded-lg"*/}
+                          {/*  src={getImage(chunk.post_title)}*/}
+                          {/*  width={103}*/}
+                          {/*  height={70}*/}
+                          {/*  alt={chunk.post_title}*/}
+                          {/*/>*/}
+                          <div>
                             <div className="font-bold text-xl">{chunk.post_title}</div>
                             <div className="mt-1 font-bold text-sm">{chunk.post_date}</div>
                           </div>
@@ -408,13 +410,13 @@ export default function Home() {
                           <IconExternalLink />
                         </a>
                       </div>
-                      <div className="mt-4">{chunk.content}</div>
+                      <div className="mt-4 contentColor">{chunk.content}</div>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="mt-6 text-center text-lg">{`AI-powered search and chat for Tim Urban's blog "Wait But Why."`}</div>
+              <div className="mt-6 text-center text-lg">{`AI-powered search and chat for Help Center`}</div>
             )}
           </div>
         </div>
