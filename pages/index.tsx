@@ -341,7 +341,7 @@ export default function Home() {
               </div>
             ) : answer ? (
               <div className="mt-6">
-                <div className="font-bold text-2xl mb-2">Search Results</div>
+                <div className="font-bold text-2xl mb-2">Answer</div>
                 <Answer text={answer} />
 
                 <div className="mt-6 mb-16">
